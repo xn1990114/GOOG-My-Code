@@ -14,7 +14,7 @@ public class MedianIn2DArray {
 		return (low+high)/2.0;
 	}
 	public double findKth(int[][] nums,int k){
-		int[][] index=new int[nums.length][nums[0].length];
+		int[][] index=new int[nums.length][2];
 		for(int i=0;i<index.length;i++){
 			index[i][1]=nums[i].length-1;
 		}
@@ -34,13 +34,13 @@ public class MedianIn2DArray {
 						lrow=i;
 						l=nums[i][m];
 					}
-					if(nums[i][m]>h){
+					if(nums[i][m]>=h){
 						hrow=i;
 						h=nums[i][m];
 					}
 				}
 			}
-			if(l==h){
+			if(lrow==hrow){
 				if(k<=count&&k>count-countHasValue){
 					return h;
 				}
