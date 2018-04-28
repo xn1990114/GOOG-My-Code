@@ -26,12 +26,16 @@ public class CleaningRobot {
 	int[][] room;
 	int r;
 	int c;
+	int oriR;
+	int oriC;
 	int dir; // 0-up, 1-right,2-down,3-left
 
 	public CleaningRobot(int[][] room, int r, int c) {
 		this.room = room;
 		this.r = r;
 		this.c = c;
+		this.oriR=r;
+		this.oriC=c;
 		this.dir=0;
 	}
 
@@ -48,6 +52,9 @@ public class CleaningRobot {
 				this.turnRight(2);
 			}
 			this.turnRight(1);
+		}
+		if(r==oriR&&c==oriC){
+			return;
 		}
 		this.turnLeft(2);
 		this.Move();
