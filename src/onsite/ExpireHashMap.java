@@ -20,47 +20,57 @@ public class ExpireHashMap <T,V>{
 			this.timeStamp=time;
 		}
 	}
+	long duration;
 	Node<T> head;
 	Node<T> tail;
-	public Map<T,V> valueMap;// map key and value
-	public Map<T,Node<T>> nodeMap;// mapkey and node;
-	public ExpireHashMap(){
-		this.valueMap=new HashMap<T,V>();
-		this.nodeMap=new HashMap<T,Node<T>>();
+	public CustomHashMap<T,V> valueMap;// map key and value
+	public CustomHashMap<T,Node<T>> nodeMap;// map key and node;
+	public ExpireHashMap(long duration){
+		this.valueMap=new CustomHashMap<T,V>();
+		this.nodeMap=new CustomHashMap<T,Node<T>>();
 		this.head=new Node<T>(null,-1);
-		this.tail=head;
+		this.tail=new Node<T>(null,Long.MAX_VALUE);
+		head.next=tail;
+		tail.previous=head;
+		this.duration=duration;
 	}
 	public void put(T key,V value,long time){
+		cleanUp(time);
 		if(this.valueMap.containsKey(key)){
-			Node<T> temp=this.nodeMap.get(key);
-			if(temp==tail){
-				tail=temp.previous;
-			}
-			temp.previous.next=temp.next;
-			if(temp.next!=null){
-				temp.next.previous=temp.previous;
-			}
+			remove(key);
 		}
 		Node<T> curr=new Node<T>(key,time);
-		tail.next=curr;
-		curr.previous=tail;
-		tail=curr;
+		
+		tail.previous.next=curr;
+		curr.previous=tail.previous;
+		tail.previous=curr;
+		curr.next=tail;
 		this.valueMap.put(key, value);
-		this.nodeMap.put(key, tail);
+		this.nodeMap.put(key, curr);
 	}
 	public V get(T key,long time){
-		while(head.next!=null&&head.next.timeStamp<time){
-			T tempKey=head.next.key;
-			this.valueMap.remove(tempKey);
-			this.nodeMap.remove(tempKey);
-			head.next=head.next.next;
-			if(head.next.next!=null){
-				head.next.next.previous=head;
+		cleanUp(time);
+		return this.valueMap.get(key);
+	}
+	public void remove(T key){
+		Node<T> curr=nodeMap.get(key);
+		if(curr==null){
+			return;
+		}
+		curr.previous.next=curr.next;
+		curr.next.previous=curr.previous;
+		valueMap.remove(curr.key);
+		nodeMap.remove(curr.key);
+	}
+	public void cleanUp(long timestamp){
+		while(head.next!=tail){
+			Node<T> curr=head.next;
+			if(curr.timeStamp<timestamp-duration){
+				remove(curr.key);
+			}
+			else{
+				break;
 			}
 		}
-		if(head.next==null){
-			tail=head;
-		}
-		return this.valueMap.get(key);
 	}
 }

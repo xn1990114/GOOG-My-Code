@@ -16,6 +16,14 @@ import java.util.*;
                         update(1, 10)                8                           10                        8
                         delete(2)                        10                           10                        10
  */
+/*
+ * 针对各种情况进行实现和算法复杂度讨论。（
+ * 大量更新？  Map<Integer,Double> timeMap time->price
+ * 大量查询？	 Double LinkedList price low->high
+ * invalidate很多   timeMap<Integer,ListNode>+linkedList
+ * invalidate很少？  2 pq + timeMap + currentTimeNode
+ * all log N -> create custom class PriceWithTime(double price,int time) + TreeSet<PriceWithTime> TreeMap(time->priceWithTime)
+ */
 public class Stock {
 	class Node{
 		int timeStamp;

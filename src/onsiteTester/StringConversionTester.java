@@ -19,6 +19,9 @@ public class StringConversionTester {
 		assertTrue(sc.countSteps(s1, s2)==6);
 		s1="bf";
 		s2="da";
+		assertTrue(sc.countSteps(s1, s2)==23);
+		s1="bfcb";
+		s2="dagg";
 		assertTrue(sc.countSteps(s1, s2)==-1);
 	}
 

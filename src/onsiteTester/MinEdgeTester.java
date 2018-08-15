@@ -16,6 +16,8 @@ public class MinEdgeTester {
 		assertTrue(ed.findMaxLength(a2)==3);
 		int[] a3={1,2,1,2,4,2,4,1};
 		assertTrue(ed.findMaxLength(a3)==6);
+		int[] a4={1,2,1,5,5,4};
+		assertTrue(ed.findMaxLength(a4)==4);
 	}
 
 }

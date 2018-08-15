@@ -20,73 +20,39 @@ public class MineDigger {
 		if(mine==null||mine.length==0||mine[0].length==0){
 			return 0;
 		}
-		int res=0;
-		// 0 up 1 left 2 down 3 right
-		int[][][] maxCount=new int[mine.length][mine[0].length][4];
+		int max=0;
+		int[][] move={{1,0},{-1,0},{0,1},{0,-1}};
+		int[][][] count=new int[mine.length][mine[0].length][4];
 		for(int i=0;i<mine.length;i++){
 			for(int j=0;j<mine[0].length;j++){
-				if(mine[i][j]>0){
-					updateMax(i,j,mine,new boolean[mine.length][mine[0].length],maxCount);
-					for(int k=0;k<4;k++){
-						res=Math.max(res,maxCount[i][j][k]);
-					}
+				Arrays.fill(count[i][j], -1);
+			}
+		}
+		for(int i=0;i<mine.length;i++){
+			for(int j=0;j<mine[0].length;j++){
+				findMax(i,j,move,count,mine,-1,-1);
+				for(int k=0;k<4;k++){
+					max=Math.max(max, count[i][j][k]);
 				}
 			}
 		}
-		return res;
+		return max;
 	}
-	public void updateMax(int r,int c,int[][] mine,boolean[][] visited,int[][][] maxCount){
-		if(visited[r][c]){
-			return;
+	public int findMax(int r,int c,int[][] move,int[][][] count,int[][] mine,int lastR,int lastC){
+		if(r<0||c<0||r>=mine.length||c>=mine[0].length||mine[r][c]==0){
+			return 0;
 		}
-		visited[r][c]=true;
-		if(maxCount[r][c][0]==0){
-			maxCount[r][c][0]=mine[r][c];
-			if(r-1>=0&&mine[r-1][c]>0&&!visited[r-1][c]){
-				updateMax(r-1,c,mine,visited,maxCount);
-				for(int i=0;i<4;i++){
-					if(i==2){
-						continue;
-					}
-					maxCount[r][c][i]=Math.max(maxCount[r][c][i], mine[r][c]+maxCount[r-1][c][i]);
+		int currMax=0;
+		for(int i=0;i<4;i++){
+			int newR=r+move[i][0];
+			int newC=c+move[i][1];
+			if(!(newR==lastR&&newC==lastC)){
+				if(count[r][c][i]==-1){
+					count[r][c][i]=mine[r][c]+findMax(newR,newC,move,count,mine,r,c);
 				}
+				currMax=Math.max(currMax, count[r][c][i]);
 			}
 		}
-		if(maxCount[r][c][1]==0){
-			maxCount[r][c][1]=mine[r][c];
-			if(c-1>=0&&mine[r][c-1]>0&&!visited[r][c-1]){
-				updateMax(r,c-1,mine,visited,maxCount);
-				for(int i=0;i<4;i++){
-					if(i==3){
-						continue;
-					}
-					maxCount[r][c][i]=Math.max(maxCount[r][c][i], mine[r][c]+maxCount[r][c-1][i]);
-				}
-			}
-		}
-		if(maxCount[r][c][2]==0){
-			maxCount[r][c][2]=mine[r][c];
-			if(r+1<mine.length&&mine[r+1][c]>0&&!visited[r+1][c]){
-				updateMax(r+1,c,mine,visited,maxCount);
-				for(int i=0;i<4;i++){
-					if(i==0){
-						continue;
-					}
-					maxCount[r][c][i]=Math.max(maxCount[r][c][i], mine[r][c]+maxCount[r+1][c][i]);
-				}
-			}
-		}
-		if(maxCount[r][c][3]==0){
-			maxCount[r][c][3]=mine[r][c];
-			if(c+1<mine[0].length&&mine[r][c+1]>0&&!visited[r][c+1]){
-				updateMax(r,c+1,mine,visited,maxCount);
-				for(int i=0;i<4;i++){
-					if(i==1){
-						continue;
-					}
-					maxCount[r][c][i]=Math.max(maxCount[r][c][i], mine[r][c]+maxCount[r][c+1][i]);
-				}
-			}
-		}
+		return currMax;
 	}
 }
