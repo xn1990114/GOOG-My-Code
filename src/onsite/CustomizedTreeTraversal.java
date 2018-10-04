@@ -1,28 +1,39 @@
 package onsite;
 
 public class CustomizedTreeTraversal {
-	class Node {
+	class TreeNode {
 		int val;
-		Node getParent();
-		Node getNextSibling();
-		Node getFirstChild();
+		TreeNode parent;
+		TreeNode left;
+		TreeNode right;
+		
+		TreeNode getParent(){
+			return this.parent;
+		}
+		TreeNode getNextSibling(){
+			// not implemented
+			return null;
+		}
+		TreeNode getFirstChild(){
+			if(this.left!=null){
+				return left;
+			}
+			return right;
+		}
 	}
 
-	void print(Node root) {
-		Node cur = root;
+	void print(TreeNode root) {
+		TreeNode cur = root;
 		while (cur != null) {
 			System.out.println(cur);
 			cur = nextNode(cur);
 		}
 	}
 
-	Node nextNode(Node curr) {
+	TreeNode nextNode(TreeNode curr) {
 		// 让实现这个function，然后调用print时候能打印所有的node
 		if(curr.getFirstChild()!=null){
 			return curr.getFirstChild();
-		}
-		if(curr.getNextSibling().getParent()==curr.getParent()){
-			return curr.getNextSibling();
 		}
 		while(curr!=null&&curr.getNextSibling().getParent()!=curr.getParent()){
 			curr=curr.getParent();
