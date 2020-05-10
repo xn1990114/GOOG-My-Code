@@ -30,6 +30,10 @@ public class EraseNodeInBinaryTreeTester {
 		for(int i=0;i<res.length;i++){
 			assertTrue(res[i]==r.get(i));
 		}
+		assertTrue(a.left==null);
+		assertTrue(a.right==c);
+		assertTrue(c.left==null);
+		assertTrue(c.right==g);
 	}
 
 }

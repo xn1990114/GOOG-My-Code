@@ -20,23 +20,31 @@ public class EraseNodeInBinaryTree {
 	}
 	public List<TreeNode> getRemainingNode(TreeNode root,Set<TreeNode> toremove){
 		List<TreeNode> res=new ArrayList<TreeNode>();
-		searchNode(root,res,toremove,false);
+		searchNode(root,res,toremove,null);
 		return res;
 	}
-	public void searchNode(TreeNode curr,List<TreeNode> res,Set<TreeNode> toremove,boolean parentLeft){
+	public void searchNode(TreeNode curr,List<TreeNode> res,Set<TreeNode> toremove,TreeNode parent){
 		if(curr==null){
 			return;
 		}
 		if(toremove.contains(curr)){
-			searchNode(curr.left,res,toremove,false);
-			searchNode(curr.right,res,toremove,false);
+			if(parent!=null) {
+				if(parent.left==curr) {
+					parent.left=null;
+				}
+				else {
+					parent.right=null;
+				}
+			}
+			searchNode(curr.left,res,toremove,null);
+			searchNode(curr.right,res,toremove,null);
 		}
 		else{
-			if(!parentLeft){
+			if(parent==null){
 				res.add(curr);
 			}
-			searchNode(curr.left,res,toremove,true);
-			searchNode(curr.right,res,toremove,true);
+			searchNode(curr.left,res,toremove,curr);
+			searchNode(curr.right,res,toremove,curr);
 		}
 	}
 }
